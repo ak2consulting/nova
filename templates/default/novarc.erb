@@ -1,6 +1,8 @@
 # COMMON OPENSTACK ENVS
 export OS_AUTH_USER=<%= @user %>
+export OS_USERNAME=<%= @user %>
 export OS_AUTH_KEY=<%= @password %>
+export OS_PASSWORD=<%= @password %>
 export OS_AUTH_TENANT=<%= @tenant %>
 export OS_AUTH_URL=http://<%= @keystone_api_ip %>:<%= @keystone_service_port %>/v2.0/
 export OS_AUTH_STRATEGY=<%= @auth_strategy %>

@@ -17,6 +17,8 @@
 # limitations under the License.
 #
 
+include_recipe "osops-utils"
+
 # Distribution specific settings go here
 if platform?(%w{fedora})
   # Fedora
@@ -26,12 +28,17 @@ if platform?(%w{fedora})
 else
   # All Others (right now Debian and Ubuntu)
   nova_common_package = "nova-common"
-  nova_common_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_common_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 package nova_common_package do
   action :upgrade
-  options options
+  options nova_common_package_options
+end
+
+api_ip_address = IPManagement.get_ip_for_net("management", node)
+if not node.run_list.expand(node[:environment]).recipes.include?("nova::api") then
+  api_ip_address = IPManagement.get_access_ip_for_role("nova-api", "management", node)
 end
 
 template "/etc/nova/nova.conf" do
@@ -40,15 +47,19 @@ template "/etc/nova/nova.conf" do
   group "root"
   mode "0644"
   variables(
-    :user => node[:nova][:db_user],
-    :passwd => node[:nova][:db_passwd],
-    :ip_address => node[:controller_ipaddress],
-    :db_name => node[:nova][:db],
-    :db_host => node[:nova][:db_host],
-    :api_port => node[:glance][:api_port],
-    :ipv4_cidr => node[:public][:ipv4_cidr],
-    :virt_type => node[:virt_type]
-  )
+            :user => node[:nova][:db_user],
+            :passwd => node[:nova][:db_passwd],
+            :db_name => node[:nova][:db],
+            :api_port => node[:glance][:api_port],
+            :ipv4_cidr => node[:public][:ipv4_cidr],
+            :virt_type => node[:virt_type],
+            :keystone_ip_address => IPManagement.get_access_ip_for_role("keystone", "management", node),
+            :api_ip_address => api_ip_address,
+            :rabbit_ip_address => IPManagement.get_access_ip_for_role("nova-controller", "management", node),
+            :vncproxy_ip_address => IPManagement.get_access_ip_for_role("nova-controller", "management", node),
+            :glance_ip_address => IPManagement.get_access_ip_for_role("glance", "management", node),
+            :mysql_ip_address => IPManagement.get_access_ip_for_role("mysql-master", "management", node)
+            )
 end
 
 template "/root/.novarc" do
@@ -60,8 +71,8 @@ template "/root/.novarc" do
     :user => 'admin',
     :tenant => 'openstack',
     :password => 'secrete',
-    :nova_api_ip => node[:controller_ipaddress],
-    :keystone_api_ip => node[:controller_ipaddress],
+    :nova_api_ip => IPManagement.get_access_ip_for_role("nova-api", "management", node),
+    :keystone_api_ip => IPManagement.get_access_ip_for_role("keystone", "management", node),
     :keystone_service_port => node[:keystone][:service_port],
     :nova_api_version => '1.1',
     :keystone_region => 'RegionOne',

@@ -18,6 +18,7 @@
 #
 
 include_recipe "nova::nova-common"
+include_recipe "osops-utils"
 
 # Distribution specific settings go here
 if platform?(%w{fedora})
@@ -29,7 +30,7 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_api_package = "nova-api"
   nova_api_service = nova_api_package
-  nova_api_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_api_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 directory "/var/lock/nova" do
@@ -41,6 +42,7 @@ end
 
 package "python-keystone" do
   action :upgrade
+  options nova_api_package_options
 end
 
 package nova_api_package do
@@ -60,7 +62,7 @@ template "/etc/nova/api-paste.ini" do
   group "root"
   mode "0644"
   variables(
-    :ip_address => node[:controller_ipaddress],
+    :ip_address => IPManagement.get_access_ip_for_role("keystone", "management", node),
     :component  => node[:package_component],
     :service_port => node[:keystone][:service_port],
     :admin_port => node[:keystone][:admin_port],

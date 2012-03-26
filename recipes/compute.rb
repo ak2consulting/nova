@@ -35,7 +35,7 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_compute_package = "nova-compute"
   nova_compute_service = nova_compute_package
-  nova_compute_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_compute_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
   if node[:virt_type] == "kvm"
     nova_compute_package = "nova-compute-kvm"
   elsif node[:virt_type] == "qemu"
@@ -45,7 +45,7 @@ end
 
 package nova_compute_package do
   action :upgrade
-  options "-o Dpkg::Options::='--force-confold' --force-yes"
+  options nova_compute_package_options
 end
 
 service nova_compute_service do

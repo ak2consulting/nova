@@ -29,11 +29,12 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_scheduler_package = "nova-scheduler"
   nova_scheduler_service = nova_scheduler_package
-  nova_scheduler_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_scheduler_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 package nova_scheduler_package do
   action :upgrade
+  options nova_scheduler_package_options
 end
 
 service nova_scheduler_service do

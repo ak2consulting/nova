@@ -19,12 +19,16 @@
 
 include_recipe "nova::nova-common"
 
+nova_vnc_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
+
 package "nova-novnc" do
   action :upgrade
+  options nova_vnc_package_options
 end
 
 package "nova-vncproxy" do
   action :upgrade
+  options nova_vnc_package_options
 end
 
 execute "Fix permission Bug" do
