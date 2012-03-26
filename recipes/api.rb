@@ -18,6 +18,7 @@
 #
 
 include_recipe "nova::nova-common"
+include_recipe "osops-utils"
 
 # Distribution specific settings go here
 if platform?(%w{fedora})
@@ -61,7 +62,7 @@ template "/etc/nova/api-paste.ini" do
   group "root"
   mode "0644"
   variables(
-    :ip_address => node[:controller_ipaddress],
+    :ip_address => IPManagement.get_access_ip_for_role("keystone", "management", node),
     :component  => node[:package_component],
     :service_port => node[:keystone][:service_port],
     :admin_port => node[:keystone][:admin_port],
