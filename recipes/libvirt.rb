@@ -13,11 +13,12 @@ else
   # All Others (right now Debian and Ubuntu)
   libvirt_package = "libvirt-bin"
   libvirt_service = libvirt_package
-  libvirt_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  libvirt_package_options = ""
 end
 
 package libvirt_package do
   action :install
+  options libvirt_package_options
 end
 
 if platform?(%w{fedora})

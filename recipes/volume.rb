@@ -15,7 +15,7 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_volume_package = "nova-volume"
   nova_volume_service = nova_volume_package
-  nova_volume_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_volume_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 package "python-keystone" do

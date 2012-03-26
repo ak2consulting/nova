@@ -26,12 +26,12 @@ if platform?(%w{fedora})
 else
   # All Others (right now Debian and Ubuntu)
   nova_common_package = "nova-common"
-  nova_common_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_common_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 package nova_common_package do
   action :upgrade
-  options options
+  options nova_common_package_options
 end
 
 template "/etc/nova/nova.conf" do

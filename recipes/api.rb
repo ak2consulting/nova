@@ -29,7 +29,7 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_api_package = "nova-api"
   nova_api_service = nova_api_package
-  nova_api_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_api_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 directory "/var/lock/nova" do
@@ -41,6 +41,7 @@ end
 
 package "python-keystone" do
   action :upgrade
+  options nova_api_package_options
 end
 
 package nova_api_package do

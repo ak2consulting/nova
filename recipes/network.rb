@@ -29,7 +29,7 @@ else
   # All Others (right now Debian and Ubuntu)
   nova_network_package = "nova-network"
   nova_network_service = nova_network_package
-  nova_network_package_options = "-o Dpkg::Options::='--force-confold' --force-yes"
+  nova_network_package_options = "-o Dpkg::Options::='--force-confold' -o Dpkg::Options::='--force-confdef' --force-yes"
 end
 
 package nova_network_package do
