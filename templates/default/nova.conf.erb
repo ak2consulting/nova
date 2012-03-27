@@ -62,3 +62,9 @@ enable_zone_routing=true
 
 # KEYSTONE
 keystone_ec2_url=http://<%= @keystone_ip_address %>:5000/v2.0/ec2tokens
+
+# VOLUME
+<% @volume_options.each do |k,v| -%>
+<%= k %>=<%= v %>
+<% end %>
+

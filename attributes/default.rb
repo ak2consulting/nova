@@ -18,6 +18,12 @@ default[:volume][:adminURL] = "http://#{default[:controller_ipaddress]}:#{defaul
 default[:volume][:internalURL] = default[:volume][:adminURL]
 default[:volume][:publicURL] = default[:volume][:adminURL]
 
+# valid values are "iet" and "rbd"
+default[:volume][:driver] = "iet"
+default[:volume][:rbd_pool] = "default"
+default[:volume][:isci_helper] = "tgtadm"
+default[:volume][:iscsi_volume_group] = "nova-volumes"
+
 # TODO (cleanup this section)
 default[:keystone][:db] = "keystone"
 default[:keystone][:db_user] = "keystone"

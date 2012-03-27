@@ -7,9 +7,9 @@
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
-# 
+#
 #     http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -18,6 +18,18 @@
 #
 
 include_recipe "osops-utils"
+
+volume_info = {
+  "iet" => {
+    "volume_driver" => "nova.volume.driver.ISCSIDriver",
+    "volume_group" => node[:volume][:iscsi_volume_group],
+    "iscsi_helper" => node[:volume][:iscsi_helper]
+  },
+  "rbd" => {
+    "volume_driver" => "nova.volume.driver.RBDDriver",
+    "rbd_pool" => node[:volume][:rbd_pool]
+  }
+}
 
 # Distribution specific settings go here
 if platform?(%w{fedora})
@@ -58,7 +70,8 @@ template "/etc/nova/nova.conf" do
             :rabbit_ip_address => IPManagement.get_access_ip_for_role("nova-controller", "management", node),
             :vncproxy_ip_address => IPManagement.get_access_ip_for_role("nova-controller", "management", node),
             :glance_ip_address => IPManagement.get_access_ip_for_role("glance", "management", node),
-            :mysql_ip_address => IPManagement.get_access_ip_for_role("mysql-master", "management", node)
+            :mysql_ip_address => IPManagement.get_access_ip_for_role("mysql-master", "management", node),
+            :volume_options => volume_info[node[:volume][:driver]]
             )
 end
 
