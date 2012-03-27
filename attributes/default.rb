@@ -38,6 +38,8 @@ default[:image][:natty] = "http://c250663.r63.cf1.rackcdn.com/ubuntu-11.04-serve
 default[:image][:maverick] = "http://c250663.r63.cf1.rackcdn.com/ubuntu-10.10-server-uec-amd64-multinic.tar.gz"
 default[:image][:tty] = "http://smoser.brickies.net/ubuntu/ttylinux-uec/ttylinux-uec-amd64-12.1_2.6.35-22_1.tar.gz"
 
+default[:nova_networks] = [ "public", "private" ]
+
 default[:public][:label] = "public"
 default[:public][:ipv4_cidr] = "192.168.100.0/24"
 default[:public][:num_networks] = "1"
