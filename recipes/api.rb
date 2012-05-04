@@ -70,3 +70,21 @@ template "/etc/nova/api-paste.ini" do
   )
   notifies :restart, resources(:service => nova_api_service), :immediately
 end
+
+node[:nova][:adminURL] = "http://#{IPManagement.get_access_ip_for_role("nova-api","management", node)}:8774/v1.1/%(tenant_id)s"
+node[:nova][:internalURL] = node[:nova][:adminURL]
+node[:nova][:publicURL] = node[:nova][:adminURL]
+
+keystone_register "Register Compute Endpoint" do
+  auth_host ip_address
+  auth_port node[:keystone][:admin_port]
+  auth_protocol "http"
+  api_ver "/v2.0"
+  auth_token node[:keystone][:admin_token]
+  service_type "compute"
+  endpoint_region "RegionOne"
+  endpoint_adminurl node[:nova][:adminURL]
+  endpoint_internalurl node[:nova][:internalURL]
+  endpoint_publicurl node[:nova][:publicURL]
+  action :create_endpoint
+end
