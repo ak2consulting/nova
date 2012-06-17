@@ -76,7 +76,7 @@ node[:nova][:internalURL] = node[:nova][:adminURL]
 node[:nova][:publicURL] = node[:nova][:adminURL]
 
 keystone_register "Register Compute Endpoint" do
-  auth_host ip_address
+  auth_host IPManagement.get_access_ip_for_role("keystone", "management", node)
   auth_port node[:keystone][:admin_port]
   auth_protocol "http"
   api_ver "/v2.0"
