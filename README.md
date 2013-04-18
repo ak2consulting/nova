@@ -1,27 +1,5 @@
-Description
-===========
+# THIS IS GOING AWAY
 
-Requirements
-============
+You should not use this anymore. Check the rcbops github organization if you still need this and reparent.
 
-## Cookbooks
-
-* apt
-* database
-* glance
-* keystone
-* mysql
-* openssh
-* rabbitmq
-
-## Platforms
-
-* Ubuntu
-* Fedora
-
-Attributes 
-==========
-
-Usage
-=====
-
+# This repo will be gone by the end of May 
